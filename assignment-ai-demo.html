@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>AI Assignment Demo</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f3f6fb;
+padding:40px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+.card{
+background:white;
+padding:30px;
+margin-bottom:40px;
+border-radius:10px;
+box-shadow:0 6px 20px rgba(0,0,0,0.08);
+}
+
+h1{
+text-align:center;
+margin-bottom:40px;
+}
+
+input,textarea{
+width:100%;
+padding:10px;
+margin-bottom:15px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button{
+padding:12px;
+background:#2c7be5;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+width:100%;
+font-size:16px;
+}
+
+button:hover{
+background:#1a68d1;
+}
+
+.example{
+background:#eef4ff;
+padding:12px;
+border-radius:6px;
+margin-bottom:10px;
+cursor:pointer;
+}
+
+.result{
+background:#111;
+color:#00ff8c;
+padding:15px;
+margin-top:15px;
+border-radius:6px;
+white-space:pre-wrap;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+<h1>AI Backend Assignment Demo</h1>
+
+
+<!-- MODULE 1 -->
+
+<div class="card">
+
+<h2>Module 1 – AI Auto Category Generator</h2>
+
+<p><b>Click example to autofill</b></p>
+
+<div class="example" onclick="fillExample('Bamboo Toothbrush','Eco friendly bamboo toothbrush biodegradable handle')">
+Bamboo Toothbrush – Eco friendly bamboo toothbrush biodegradable handle
+</div>
+
+<div class="example" onclick="fillExample('Organic Cotton T Shirt','Sustainable organic cotton clothing eco friendly fashion')">
+Organic Cotton T Shirt – Sustainable organic cotton clothing eco friendly fashion
+</div>
+
+<div class="example" onclick="fillExample('Reusable Water Bottle','Stainless steel reusable bottle plastic free eco friendly')">
+Reusable Water Bottle – Stainless steel reusable bottle plastic free eco friendly
+</div>
+
+
+<input id="product" placeholder="Product name">
+
+<textarea id="description" placeholder="Product description"></textarea>
+
+<button onclick="generateCategory()">Generate Category</button>
+
+<pre id="categoryResult" class="result"></pre>
+
+</div>
+
+
+
+<!-- MODULE 4 -->
+
+<div class="card">
+
+<h2>Module 4 – AI WhatsApp Support Bot</h2>
+
+<p><b>Click example message</b></p>
+
+<div class="example" onclick="fillMessage('Where is my order 1234?')">
+Where is my order 1234?
+</div>
+
+<div class="example" onclick="fillMessage('Track order 5678')">
+Track order 5678
+</div>
+
+<div class="example" onclick="fillMessage('I want a refund for order 9012')">
+I want a refund for order 9012
+</div>
+
+<div class="example" onclick="fillMessage('What is your return policy?')">
+What is your return policy?
+</div>
+
+<input id="message" placeholder="Customer message">
+
+<button onclick="sendMessage()">Send Message</button>
+
+<pre id="botResult" class="result"></pre>
+
+</div>
+
+</div>
+
+
+<script>
+
+
+function fillExample(name,desc){
+
+document.getElementById("product").value=name
+document.getElementById("description").value=desc
+
+}
+
+
+function fillMessage(msg){
+
+document.getElementById("message").value=msg
+
+}
+
+
+
+async function generateCategory(){
+
+const name=document.getElementById("product").value
+const description=document.getElementById("description").value
+
+
+const res=await fetch(
+"https://ai-auto-category-tag-generator.onrender.com/api/category/generate",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+name:name,
+description:description
+})
+})
+
+const data=await res.json()
+
+document.getElementById("categoryResult").innerText=
+JSON.stringify(data,null,2)
+
+}
+
+
+
+async function sendMessage(){
+
+const msg=document.getElementById("message").value
+
+
+const res=await fetch(
+"https://ai-whatsapp-support-bot.onrender.com/webhook",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+
+entry:[{
+changes:[{
+value:{
+messages:[{
+from:"demo-user",
+id:"demo",
+text:{
+body:msg
+}
+}]
+}
+}]
+}]
+
+})
+})
+
+const data=await res.json()
+
+document.getElementById("botResult").innerText=
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>
